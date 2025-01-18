@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios, { axiosPrivate } from "../api/axios.js";
-import useAuth from "../hooks/useAuth.js";
+
 import {
   ADD_PRODUCT_URL,
   CATEGORY_LIST_URL,
@@ -9,10 +9,6 @@ import {
 } from "../constant.js";
 
 const AddProduct = () => {
-  // const { auth } = useAuth(); // Logged-in user information
-  //const loggedInUserId = auth?.Id;
-
-  // State variables
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -23,14 +19,14 @@ const AddProduct = () => {
   const [stock, setStock] = useState("");
   const [name, setName] = useState("");
   const [isUploading, setIsUploading] = useState(false);
-  const [itemType, setItemType] = useState("sell"); // Default to "Buy"
+  const [itemType, setItemType] = useState("sell");
 
-  // Fetch categories on component mount
+  // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(CATEGORY_LIST_URL); // Fetch categories
-        setCategories(response.data.data); // Assuming API returns { categories: [] }
+        const response = await axios.get(CATEGORY_LIST_URL);
+        setCategories(response.data.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -47,7 +43,7 @@ const AddProduct = () => {
           const response = await axios.get(
             `${CATEGORY_LIST_URL}?parentCategory=${selectedCategory}`
           ); // Fetch subcategories
-          setSubCategories(response.data.data); // Assuming API returns { subCategories: [] }
+          setSubCategories(response.data.data);
         } catch (error) {
           console.error("Error fetching subcategories:", error);
         }
@@ -120,6 +116,7 @@ const AddProduct = () => {
 
     try {
       const response = await axiosPrivate.post(ADD_PRODUCT_URL, productData);
+      console.log(response);
       alert("Product added successfully!");
     } catch (error) {
       console.error("Error adding product:", error);
@@ -220,9 +217,7 @@ const AddProduct = () => {
           className="mb-4"
           disabled={isUploading}
         />
-        {isUploading && (
-          <div className="text-blue-500 mb-4">Uploading...</div> // Simple loader
-        )}
+        {isUploading && <div className="text-blue-500 mb-4">Uploading...</div>}
         <div className="flex flex-wrap gap-4 mb-4">
           {images.map((image, index) => (
             <div key={index} className="relative w-20 h-20">
